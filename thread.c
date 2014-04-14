@@ -11,6 +11,13 @@ int main(int  argc, char **argv){
     return 0;
 }
 
+void setup(){
+    //you also need to do this one
+    //initialize customer table
+    //initialize thread table
+    //initialize book table
+}
+
 void init_order_buf(order_buffer *ob, int buf_size){
     *ob->buf = calloc(buf_size, sizeof(order));
     ob->size = buf_size;
@@ -20,16 +27,23 @@ void init_order_buf(order_buffer *ob, int buf_size){
     sem_init(&ob->availableOrders, 0, 0);
 }
 
-void kill_order_buf(order_buffer *ob);
+void kill_order_buf(order_buffer *ob){
+}
 
 //after order is processed it is not needed in the order_buffer anymore
 void free_order(order *tempo){
-    free(tempo->categ_name);
-    free(tempo->customer_name);
-    free(tempo->book_name);
-    free(tempo);
 }
 
-void *fillNewOrde();
-void *processOrder(void *args);
+void *fillNewOrde(void *args){
+    //this is the one you need to do
+    return NULL; //temporary
+}
+
+void *processOrder(void *args){
+    order *temp_order = (order *) args;
+    orderBuffer sharedbuffer = temp_order->orders_to_process;
+    char *c_name = (*sharedbuffer->buf)->customer_name;
+    char *b_name = (*sharedbuffer->buf)->book_name;
+    return NULL; //temporary
+}
 
