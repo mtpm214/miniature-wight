@@ -6,32 +6,24 @@
 
 #define MAXBUFSIZE 10
 
-//change hashmap.h in order to fit this pa
-//need a hashmap for category name to tid
-//need a hashmap for customer name to customer info
 typedef struct info_t{
-    char * categ_name; //which thread to go to
-    char * customer_name; //for customer funds
-    char * book_name; //for price of book
+    int customer_id; //for customer funds
+    char *book_name; //for price of book
+    float bookprice;
 }orderInfo;
 
 typedef struct orders_struct{
 	orderInfo **buf;
+	customerHashPtr customer_table; //TEMP: CHANGE HASH TYPE
+	threadHashPtr thread_table; //TEMP: CHANGE HASH TYPE
 	int size; //should not exceed MAXBUFSIZE
-	//orderInfo *front;
-	//orderInfo *rear;
-	orderInfo *currOrder;
+	int front;
+	int rear;
+	//orderInfo *currOrder;
 	sem_t mutex;
     sem_t emptySlots;
     sem_t availableOrders; 
 }orderBuffer;
-
-typedef struct arg_t{
-	hashPtr thread_table; //TEMP: CHANGE HASH TYPE
-    hashPtr customer_table; //TEMP: CHANGE HASH TYPE
-	hashPtr book_table; //TEMP: CHANGE HASH TYPE
-	orderBuffer orders_to_process;
-}order;
 
 //sets up everything so that buffer is able to process sales
 void setup();
@@ -45,7 +37,9 @@ void kill_order_buf(orderBuffer *ob);
 //deletes order from buffer after it has been processed
 void free_order(order *tempo);
 
-void *fillNewOrde(void *args);
+void *fillNewOrder(void *args);
 
 //struct order will be passed as an argument in order to process the order
 void *processOrder(void *args);
+
+void writeReport(FILE *opf);
