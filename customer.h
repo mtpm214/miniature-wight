@@ -11,8 +11,4 @@ typedef struct CustomerStruct{
 	float balance;
 }customer;
 
-CategoryPtr categoryCreate(char *);
-
-CustomerPtr customerCreate()
-
 #endif

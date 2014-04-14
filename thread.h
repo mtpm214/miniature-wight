@@ -29,13 +29,13 @@ typedef struct orders_struct{
 void setup();
 
 //initiates a buffer to the specified size
-void init_order_buf(orderBuffer *ob, int size);
+void init_order_buf(orderBuffer *ob, int buf_size, customerHashPtr customer_db, threadHashPtr t_db);
 
 //deletes all orders from a buffer, in case something goes wrong
 void kill_order_buf(orderBuffer *ob);
 
 //deletes order from buffer after it has been processed
-void free_order(order *tempo);
+void free_order(orderBuffer *ob, orderInfo *order);
 
 void *fillNewOrder(void *args);
 

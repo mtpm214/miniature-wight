@@ -20,7 +20,7 @@ void setup(){
 //following books example
 //change hashPtr 
 void init_order_buf(orderBuffer *ob, int buf_size, customerHashPtr customer_db, threadHashPtr t_db){
-    *ob->buf = calloc(buf_size, sizeof(order));
+    *ob->buf = calloc(buf_size, sizeof(orderInfo));
     ob->customer_table = customer_db;
     ob->thread_table = t_db;
     ob->size = buf_size;
@@ -37,7 +37,7 @@ void kill_order_buf(orderBuffer *ob){
 }
 
 //after order is processed it is not needed in the order_buffer anymore
-void free_order(order *tempo){
+void free_order(orderBuffer *ob, orderInfo *order){
 }
 
 //use wrapper around the critical sections of the code
@@ -60,28 +60,22 @@ void *processOrder(void *args){
     customer c_info;
 
     //wait for orders to become available
-    int sem_wait(&orders->availableOrders);
+    sem_wait(&orders->availableOrders);
 
     //beggin of mutual exclusion to buffer
-    int sem_wait(&orders->mutex);
-    index = (++orders->front)%(order->size);
+    sem_wait(&orders->mutex);
+    index = (++orders->front)%(orders->size);
     oinf = (*orders->buf)[index];
     c_id = oinf.customer_id;
     b_name = oinf.book_name;
     price = oinf.bookprice;
     c_info = getCustomer(c_id, &orders->customer_table);
 
-    int sem_post(&orders->mutex);
+    sem_post(&orders->mutex);
     //end of mutual exclusion to buffer
 
     //announce that there is another empty slot
-    int sem_post(&orders->emptySlots);
-    
-
-
-    int c_id = (*sharedbuffer.buf)->customer_id;
-
-
+    sem_post(&orders->emptySlots);
 
     return NULL; //temporary
 }

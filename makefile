@@ -1,8 +1,8 @@
-OBJS = thread.o
+OBJS = thread.o hashmap.o
 CC = gcc
 CFLAGS = -g -Wall
 
-thread: thread.o
+thread: $(OBJS) 
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c %.h
