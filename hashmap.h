@@ -34,12 +34,6 @@ int addCategory(char *, pthread_t, threadHashPtr *);
 
 int addCustomer(int, customer, customerHashPtr *);
 
-
-
-/*
- * A get function for the hashmap
- * Returns the linked list of indexes given a certain key (a word)
- */
 pthread_t getThreadID(char *, threadHashPtr *);
 
 customer getCustomer(int, customerHashPtr *);
