@@ -34,7 +34,7 @@ void kill_order_buf(order_buffer *ob){
 void free_order(order *tempo){
 }
 
-void *fillNewOrde(void *args){
+void *fillNewOrder(void *args){
     //this is the one you need to do
     return NULL; //temporary
 }

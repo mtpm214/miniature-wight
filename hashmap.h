@@ -3,37 +3,47 @@
 
 //credit for the hashmap backend is given to UTHash from: http://troydhanson.github.io/uthash/
 #include "uthash.h"
-#include "index.h"
+#include "customer.h"
+#include <pthread.h>
+
 
 //holds the key and a LinkedList of Indexes, from index.c
 //UT_hash_handle is what uthash uses to create our hashmap
-struct Hashmap{
-	char * key;
-	IndexPtr indexList;
+struct threadHash{
+	char * category_key;
+	pthread_t TID;
 	UT_hash_handle hh;
 };
-typedef struct Hashmap * hashPtr;
+typedef struct threadHash * threadHashPtr;
 
+struct customerHash{
+	int customer_key;
+	customer customer_info;
+	UT_hash_handle hh;
+};
+typedef struct customerHash * customerHashPtr;
 /*
  * Used to clear the hash and free all memory when caller is done with it
  */
-void clearHash(hashPtr *);
+void clearCustomerHash(customerHashPtr *);
 
-/*
- * Adds an index to a hash, given a key (the token)
- */
-void addIndex(hashPtr *, char *, IndexPtr);
+void clearThreadHash(threadHashPtr *);
+
+
+int addCategory(char *, pthread_t, threadHashPtr *);
+
+int addCustomer(int, customer, customerHashPtr *);
+
+
 
 /*
  * A get function for the hashmap
  * Returns the linked list of indexes given a certain key (a word)
  */
-IndexPtr getValue(char *, hashPtr *);
+pthread_t getThreadID(char *, threadHashPtr *);
 
- /*
- * Used for debugging purposes only
- */
-void printTable(hashPtr *);
+customer getCustomer(int, customerHashPtr *);
+
 
 
 #endif
