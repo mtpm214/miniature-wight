@@ -1,21 +1,25 @@
+#ifndef THREAD_H
+#define THREAD_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include "hashmap.h"
+#include "sorted-list.h"
+#include "sales.h"
 
 #define MAXBUFSIZE 10
 
-typedef struct info_t{
-    int customer_id; //for customer funds
-    char *book_name; //for price of book
-    float bookprice;
-}orderInfo;
+//MAYBE MAKE SEPARATE FILES, ONE THAT DEALS WITH PROCESSING AND THE OTHER ONE THAT DEALS WITH THE SALES
 
 typedef struct orders_struct{
 	orderInfo **buf;
-	customerHashPtr customer_table; //TEMP: CHANGE HASH TYPE
-	threadHashPtr thread_table; //TEMP: CHANGE HASH TYPE
+	customerHashPtr customer_table;
+	threadHashPtr thread_table;
+	SortedListPtr successfulSales;
+	SortedListPtr rejectedOrders;
+	SortedList
 	int size; //should not exceed MAXBUFSIZE
 	int front;
 	int rear;
@@ -42,4 +46,4 @@ void *fillNewOrder(void *args);
 //struct order will be passed as an argument in order to process the order
 void *processOrder(void *args);
 
-void writeReport(FILE *opf);
+#endif

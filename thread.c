@@ -23,6 +23,8 @@ void init_order_buf(orderBuffer *ob, int buf_size, customerHashPtr customer_db, 
     *ob->buf = calloc(buf_size, sizeof(orderInfo));
     ob->customer_table = customer_db;
     ob->thread_table = t_db;
+    ob->successfulSales = SLCreate(compareCustomer, destroyCustomer);
+    ob->rejectedSales = SLCreate(compareCustomer, destroyCustomer);
     ob->size = buf_size;
     ob->front = ob->rear = 0;
     //ob->currOrder = *ob->buf;
