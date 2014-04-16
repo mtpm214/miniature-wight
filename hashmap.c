@@ -1,35 +1,35 @@
 #include "hashmap.h"
 
-void clearCustomerHash(customerHashPtr *a){
+void clearCustomerHash(customerHashPtr *customerHash){
 
 }
 
-void clearThreadHash(threadHashPtr *b){
+void clearThreadHash(threadHashPtr *threadHash){
 
 }
 
 
-int addCategory(char * sdaf, pthread_t sadf, threadHashPtr *c){
+int addCategory(char *category , pthread_t threadID, threadHashPtr *threadHash){
 
 	return 0;
 }
 
-int addCustomer(int a2, customer sdfs, customerHashPtr *d){
+int addCustomer(int customerID, customer newCustomer, customerHashPtr *customerHash){
 
 	return 0;
 
 }
 
-pthread_t getThreadID(char *key, threadHashPtr *gfgdg){
+pthread_t getThreadID(char *key, threadHashPtr *threadHash){
 
-	pthread_t TID = 0;
+	pthread_t threadID = 0;
 	//HASH_FIND_INT(*hash_t,)
-	return TID;
+	return threadID;
 }
 
-customer getCustomer(int sdfsd, customerHashPtr *sdfsdf){
-	customer fuck;
-	return fuck;
+customer getCustomer(int customerID, customerHashPtr *customerHash){
+	customer tempCustomer;
+	return tempCustomer;
 }
 
 // void clearHash(hashPtr *hash){

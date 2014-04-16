@@ -6,8 +6,8 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include "hashmap.h"
-#include "sorted-list.h"
-#include "sales.h"
+//#include "sorted-list.h"
+//#include "sales.h"
 
 #define MAXBUFSIZE 10
 
