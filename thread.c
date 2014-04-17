@@ -7,13 +7,118 @@
 
 //for testing
 //#define NUMTHREADS 1000
+long getFileSize(FILE *fp){
+    long fileSize;
+    fseek(fp, 0, SEEK_END);
+    fileSize = ftell(fp);
+    rewind(fp);
 
-int main(int  argc, char **argv){  
-    return 0;
+    return fileSize;
 }
 
-void setup(){
-    //you also need to do this one
+int main(int  argc, char **argv){ 
+    if(argc != 4){
+        printf("Illegal number of args.\n");
+        printf("Exiting.\n");
+        exit(1);
+    }else{
+        FILE *order_fp;
+        char *db_file = argv[1];
+        char *order_file = argv[2];
+        char *categ_file = argv[3];
+        threadHashPtr threadHash_t = NULL;
+        customerHashPtr customerHash_t = NULL;
+        setup(db_file, order_file, categ_file, threadHash_t, customerHash_t);
+        
+        if((order_fp = fopen(orderFile, "r")) == NULL){
+            perror("Error trying to open orders file\n");
+            printf("Program terminated\n");
+            exit(1)
+        }
+        else{
+            orderBuffer *order_buffer;
+            void init_order_buf(order_buffer, MAXBUFSIZE, customerHash_t, threadHash_t);
+
+            //pthread_t tid[NUMCATEGORIES];
+            //for(i=0; i<NUMCATEGORIES; i++){
+            //  pthread_create(&tid[i], NULL, fillNewOrder, order_fp);
+            //  pthread_create(&tid[i], NULL, processOrder, NULL);
+            //}
+            //
+            ////for(i=0; i<NUMCATEGORIES; i++){
+            //  pthread_join(tid[i], NULL);
+            //  pthread_join(tid[i], NULL);
+            //}
+            
+        }
+        return 0;
+    }
+
+    
+}
+
+void setup(char *dbFile, char *orderFile, char *categoriesFile, threadHashPtr t_hash, customerHashPtr c_hash){
+    // parse file
+    FILE *db_fp; // database.txt
+     // orders.txt
+    FILE *categories_fp; // categories.txt 
+
+    if((db_fp = fopen(dbFile, "r")) == NULL){
+        perror("Error trying to open database file\n");
+        printf("Program terminated\n");
+        exit(1)
+    }
+    else{
+        long fileSize = getFileSize(db_fp);
+        char buffer[fileSize];
+        TokenizerT *tk;
+        //char *data; // string read from tokenizer
+        char *name, *address, *state, *zip;
+        int customer_id;
+        float customer_funds;
+        customer * newCustomer;
+
+        if(fileSize == 0){
+            printf("File given was empty, please input another file.\n");
+            printf("Program Exiting\n");
+            exit(1);
+        }
+
+        while(fgets(buffer, fileSize, db_fp) != NULL){
+            tk = TKCreate("|", buffer);
+
+            while((name = TKGetNextToken(tk)) != NULL){
+                customer_id = atoi(TKGetNextToken(tk));
+                customer_funds = atof(TKGetNextToken(tk));
+                address = TKGetNextToken(tk);
+                state = TKGetNextToken(tk);
+                zip = TKGetNextToken(tk);
+
+                newCustomer = (customer *) malloc(sizeof(customer));
+                newCustomer->name = name;
+                newCustomer->address = address;
+                newCustomer->state = state;
+                newCustomer->zip = zip;
+                newCustomer->balance = customer_funds;
+
+                //customer_id = ((data = TKGetNextToken(tk)) != NULL) ? (atoi(data)) : (0);
+
+                addCustomer(customer_id, newCustomer, &c_hash);
+            }
+        }
+        fclose(db_fp);
+        //addCustomer(int customerID, customer newCustomer, customerHashPtr *customerHash)
+    }
+    if((categories_fp = fopen(categoriesFile, "r")) == NULL){
+        perror("Error trying to open categories file\n");
+        printf("Program terminated\n");
+        exit(1)
+    }else{
+        pthread_t tid;
+        pthread_create();
+    }
+
+           
     //initialize customer table (c_id (int) to customer info)
 }    //initialize thread table (category to thread id)}
 
@@ -44,16 +149,20 @@ void free_order(orderBuffer *ob, orderInfo *order){
 
 //use wrapper around the critical sections of the code
 //where the thread needs mutual exclusive access to the address
-void *fillNewOrder(void *args){
+void *addNewOrder(void *args){
     //this is the one you need to do
+    // Don't tell me what to do boy
+    orderBuffer *
+
     return NULL; //temporary
 }
 
 //use wrapper around the critical sections of the code
 //where the thread needs mutual exclusive access to the address
 void *processOrder(void *args){
-   //to make working a little easier
-    orderBuffer *orders = (orderBuffer *) args;
+    //to make working a little easier
+    //check if I have access to the buffer
+    //orderBuffer *orders = (orderBuffer *) args;
     orderInfo oinf;
     int index;
     int c_id;
@@ -62,16 +171,16 @@ void *processOrder(void *args){
     customer c_info;
 
     //wait for orders to become available
-    sem_wait(&orders->availableOrders);
+    sem_wait(&order_buffer->availableOrders);
 
     //beggin of mutual exclusion to buffer
-    sem_wait(&orders->mutex);
-    index = (++orders->front)%(orders->size);
-    oinf = (*orders->buf)[index];
+    sem_wait(&order_buffer->mutex);
+    index = (++order_buffer->front)%(orders->size);
+    oinf = (*order_buffer->buf)[index];
     c_id = oinf.customer_id;
     b_name = oinf.book_name;
     price = oinf.bookprice;
-    c_info = getCustomer(c_id, &orders->customer_table);
+    c_info = getCustomer(c_id, &order_buffer->customer_table);
 
     sem_post(&orders->mutex);
     //end of mutual exclusion to buffer
